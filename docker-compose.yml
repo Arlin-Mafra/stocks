@@ -1,0 +1,31 @@
+version: "3"
+
+services:
+  stockcondo-db:
+    image: postgres:12
+    container_name: stockcondo-db
+    hostname: stockcondo-db
+    env_file:
+      - ./.env
+    ports:
+      - "65432:5432"
+    # volumes:
+    #   - ./db-data:/var/lib/postgresql/data
+  stockcondo-api:
+    image: stockcondo-api
+    container_name: stockcondo-api
+    volumes:
+      - ./src:/home/app/src
+    build:
+      dockerfile: Dockerfile
+      context: .
+    ports:
+      - "3333:3333"
+    environment:
+      NODE_ENV: development
+      WAIT_HOSTS: stockcondo-db:5432
+    depends_on:
+      - stockcondo-db
+    command:
+      sh -c "/wait && npm run db:migrate && npm run db:seed && npm run dev"
+      # command: sh -c "/wait && npm run dev"
