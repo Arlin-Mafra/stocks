@@ -16,6 +16,7 @@ services:
     container_name: stockcondo-api
     volumes:
       - ./src:/home/app/src
+      - ./tmp/uploads:/home/app/tmp/uploads
     build:
       dockerfile: Dockerfile
       context: .
