@@ -9,6 +9,11 @@ class ProductController {
       include: [
         {
           association: "categories",
+          attributes: ["description"],
+        },
+        {
+          association: "attachments",
+          attributes: ["id", "url", "name", "file"],
         },
       ],
     });
@@ -17,9 +22,18 @@ class ProductController {
   }
 
   async show(request, response) {
-    const product = await Product.findByPk(request.params.id);
+    const product = await Product.findByPk(request.params.id, {
+      include: [
+        {
+          association: "attachments",
+        },
+        {
+          association: "categories",
+        },
+      ],
+    });
 
-    if (product) {
+    if (!product) {
       response.status(400).json({ error: "Produto não encontrado" });
     }
     return response.json(product);
@@ -30,6 +44,7 @@ class ProductController {
       .shape({
         name: Yup.string().max(45).required(),
         amount: Yup.number().required(),
+        attachment_id: Yup.number(),
       })
       .noUnknown();
 
@@ -56,11 +71,32 @@ class ProductController {
   }
 
   async update(request, response) {
-    return response.json({});
-  }
+    const schema = Yup.object()
+      .shape({
+        name: Yup.string().max(45),
+        amount: Yup.number(),
+        attachment_id: Yup.number(),
+      })
+      .noUnknown();
 
-  async delete(request, response) {
-    return response.json({});
+    try {
+      const product = await Product.findByPk(request.params.id);
+
+      if (!product) {
+        response.status(400).json({ error: "Produto não encontrado" });
+      }
+
+      const validFields = await schema.validate(request.body, {
+        abortEarly: false,
+        stripUnknown: true,
+      });
+
+      await product.update({ ...validFields });
+
+      return response.json(product);
+    } catch (error) {
+      response.status(400).json({ error });
+    }
   }
 }
 

@@ -6,6 +6,7 @@ class Product extends Model {
       {
         name: Sequelize.STRING(45),
         amount: Sequelize.INTEGER,
+        attachment_id: Sequelize.INTEGER,
       },
       { sequelize }
     );
@@ -16,6 +17,10 @@ class Product extends Model {
     this.belongsTo(models.Category, {
       as: "categories",
       foreignKey: "category_id",
+    });
+    this.belongsTo(models.Attachment, {
+      as: "attachments",
+      foreignKey: "attachment_id",
     });
   }
 }
