@@ -10,6 +10,7 @@ const upload = multer(multerConfig);
 import UserController from "./app/controllers/UserController";
 import AuthController from "./app/controllers/AuthController";
 import CategoryController from "./app/controllers/CategoryController";
+import ProductController from "./app/controllers/ProductController";
 import AttachmentController from "./app/controllers/AttachmentController";
 
 import AuthMiddleware from "./app/midllewares/auth";
@@ -31,8 +32,13 @@ routes.post("/categories", CategoryController.store);
 routes.put("/categories/:id", CategoryController.update);
 routes.delete("/categories/:id", CategoryController.delete);
 
-//attachment
+//products
+routes.get("/products", ProductController.index);
+routes.get("/products/:id", ProductController.show);
+routes.post("/products/:category_id", ProductController.store);
+routes.put("/products/:id", ProductController.update);
 
+//attachment
 routes.post("/attachments", upload.single("file"), AttachmentController.store);
 
 export default routes;

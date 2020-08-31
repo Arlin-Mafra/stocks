@@ -9,6 +9,16 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
+      attachment_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: "attachments",
+          key: "id",
+        },
+        onDelete: "SET NULL",
+        onUpdate: "CASCADE",
+      },
       name: {
         allowNull: false,
         type: Sequelize.STRING(45),
