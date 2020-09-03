@@ -6,8 +6,9 @@ import Product from "../app/models/Product";
 import Category from "../app/models/Category";
 import Attachment from "../app/models/Attachment";
 import Client from "../app/models/Client";
+import Sale from "../app/models/Sale";
 
-const models = [User, Category, Product, Attachment, Client];
+const models = [User, Category, Product, Attachment, Client, Sale];
 
 class Database {
   constructor() {
