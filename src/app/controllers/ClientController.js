@@ -62,7 +62,7 @@ class ClientController {
       const client = await Client.findByPk(request.params.id);
 
       if (!client) {
-        response.status(400).json({ error: "Usuário não localizado" });
+        response.status(400).json({ error: "Cliente não localizado" });
       }
 
       await client.update(validFields);

@@ -13,6 +13,7 @@ import CategoryController from "./app/controllers/CategoryController";
 import ProductController from "./app/controllers/ProductController";
 import AttachmentController from "./app/controllers/AttachmentController";
 import ClientController from "./app/controllers/ClientController";
+import SaleController from "./app/controllers/SaleController";
 
 import AuthMiddleware from "./app/midllewares/auth";
 
@@ -47,5 +48,12 @@ routes.get("/clients", ClientController.index);
 routes.get("/clients/:id", ClientController.show);
 routes.post("/clients", ClientController.store);
 routes.put("/clients/:id", ClientController.update);
+
+//sales
+routes.get("/sales", SaleController.index);
+routes.get("/sales/:id", SaleController.show);
+routes.post("/sales", SaleController.store);
+routes.put("/sales/:id", SaleController.update);
+routes.delete("/sales/:id", SaleController.delete);
 
 export default routes;
