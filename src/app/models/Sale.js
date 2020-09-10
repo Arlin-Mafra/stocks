@@ -5,7 +5,6 @@ class Sale extends Model {
     super.init(
       {
         description: Sequelize.STRING(100),
-        amount: Sequelize.INTEGER,
       },
       { sequelize }
     );
@@ -22,10 +21,9 @@ class Sale extends Model {
         foreignKey: "client_id",
         as: "client",
       });
-    this.belongsTo(models.Product, {
-      through: "sales_products",
-      foreignKey: "product_id",
-      as: "product",
+    this.hasMany(models.ItemSale, {
+      foreignKey: "sale_id",
+      as: "item_sale",
     });
   }
 }

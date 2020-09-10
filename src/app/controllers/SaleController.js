@@ -2,6 +2,7 @@ import * as Yup from "yup";
 
 import Sale from "../models/Sale";
 import Product from "../models/Product";
+import ItemSale from "../models/ItemSale";
 
 class SaleController {
   async index(request, response) {
@@ -12,8 +13,8 @@ class SaleController {
           attributes: ["id", "username", "email"],
         },
         {
-          association: "product",
-          attributes: ["id", "name", "amount", "attachment_id", "category_id"],
+          association: "item_sale",
+          attributes: ["id", "amount", "product_id"],
         },
         {
           association: "client",
@@ -32,8 +33,8 @@ class SaleController {
           attributes: ["id", "username", "email"],
         },
         {
-          association: "product",
-          attributes: ["id", "name", "amount", "attachment_id", "category_id"],
+          association: "item_sale",
+          attributes: ["id", "amount", "product_id"],
         },
         {
           association: "client",
@@ -52,8 +53,15 @@ class SaleController {
     const schema = Yup.object()
       .shape({
         description: Yup.string().max(100),
-        amount: Yup.number().required(),
-        product_id: Yup.number().required(),
+        item_sale: Yup.array()
+          .of(
+            Yup.object().shape({
+              amount: Yup.number().required(),
+              product_id: Yup.number().required(),
+            })
+          )
+          .min(1)
+          .required(),
         client_id: Yup.number().required(),
       })
       .noUnknown();
@@ -64,73 +72,29 @@ class SaleController {
         stripUnknown: true,
       });
 
-      const product = await Product.findOne({
-        where: { id: request.body.product_id },
-      });
+      const sale = await Sale.create(
+        {
+          ...validFields,
+          user_id: request.userId,
+        },
+        {
+          include: [
+            {
+              association: "item_sale",
+            },
+          ],
+        }
+      );
 
-      if (product.amount <= 0 || product.amount < validFields.amount) {
-        return response
-          .status(400)
-          .json({ error: "Verifique a quantidade indisponível!" });
-      }
-
-      await product.update({
-        amount: product.amount - validFields.amount,
-      });
-
-      const sale = await Sale.create({
-        ...validFields,
-        user_id: request.userId,
-      });
-
-      return response.json(sale);
-    } catch (error) {
-      response.status(400).json({ error });
-    }
-  }
-
-  async update(request, response) {
-    const schema = Yup.object()
-      .shape({
-        description: Yup.string().max(100),
-        amount: Yup.number(),
-        product_id: Yup.number(),
-        client_id: Yup.number(),
-      })
-      .noUnknown();
-
-    try {
-      const validFields = await schema.validate(request.body, {
-        abortEarly: false,
-        stripUnknown: true,
-      });
-
-      const product = await Product.findOne({
-        where: { id: request.body.product_id },
-      });
-
-      if (product.amount <= 0 || product.amount < validFields.amount) {
-        return response
-          .status(400)
-          .json({ error: "Verifique a quantidade indisponível!" });
-      }
-
-      await product.update({
-        amount: product.amount - validFields.amount,
-      });
-
-      const sale = await Sale.findByPk(request.params.id);
-
-      if (!sale) {
-        return response.status(400).json({ error: "Compra não localizada" });
-      }
-
-      await sale.update({
-        ...validFields,
+      //update stock
+      validFields.item_sale.map(async (item, index) => {
+        const product = await Product.findByPk(item.product_id);
+        product.update({ amount: product.amount - item.amount });
       });
 
       return response.json(sale);
     } catch (error) {
+      console.log(error);
       response.status(400).json({ error });
     }
   }
@@ -142,13 +106,16 @@ class SaleController {
       return response.status(400).json({ error: "Compra não localizada!" });
     }
 
-    await sale.destroy();
-
-    const product = await Product.findOne({ where: { id: sale.product_id } });
-
-    await product.update({
-      amount: product.amount + sale.amount,
+    const itensSale = await ItemSale.findAll({
+      where: { sale_id: request.params.id },
     });
+
+    itensSale.map(async (item) => {
+      const product = await Product.findByPk(item.product_id);
+      product.update({ amount: product.amount + item.amount });
+    });
+
+    await sale.destroy();
 
     return response.status(400).json({ error: "Compra excluída!" });
   }
