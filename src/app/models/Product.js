@@ -22,6 +22,10 @@ class Product extends Model {
       as: "attachments",
       foreignKey: "attachment_id",
     });
+    this.hasOne(models.ItemSale, {
+      foreignKey: "product_id",
+      as: "item_sale",
+    });
   }
 }
 

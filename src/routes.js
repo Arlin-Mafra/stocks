@@ -53,7 +53,6 @@ routes.put("/clients/:id", ClientController.update);
 routes.get("/sales", SaleController.index);
 routes.get("/sales/:id", SaleController.show);
 routes.post("/sales", SaleController.store);
-routes.put("/sales/:id", SaleController.update);
 routes.delete("/sales/:id", SaleController.delete);
 
 export default routes;
