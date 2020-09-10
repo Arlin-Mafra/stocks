@@ -1,2 +1,2 @@
-# Modelagem do prototipo do stocks-system
+# inventory system modeling
 <img src="/modeling/modeling.png">
