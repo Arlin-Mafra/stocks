@@ -15,10 +15,10 @@ export default async (request, response, next) => {
 
     // console.log(tokendecoded);
     request.userId = id;
-    return next();
   } catch (error) {
     return response.status(401).json({
       error: "Token inválido",
     });
   }
+  return next();
 };
