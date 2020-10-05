@@ -35,6 +35,8 @@ module.exports = {
           model: "categories",
           key: "id",
         },
+        onDelete: "SET NULL",
+        onUpdate: "CASCADE",
       },
       created_at: {
         allowNull: false,
