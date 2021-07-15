@@ -1,21 +1,18 @@
-import { Router, urlencoded } from "express";
+import { Router } from "express";
 import multer from "multer";
-
+import AttachmentController from "./app/controllers/AttachmentController";
+import AuthController from "./app/controllers/AuthController";
+import CategoryController from "./app/controllers/CategoryController";
+import ClientController from "./app/controllers/ClientController";
+import ProductController from "./app/controllers/ProductController";
+import SaleController from "./app/controllers/SaleController";
+import UserController from "./app/controllers/UserController";
+import AuthMiddleware from "./app/midllewares/auth";
 import multerConfig from "./config/multer";
 
 const routes = Router();
 
 const upload = multer(multerConfig);
-
-import UserController from "./app/controllers/UserController";
-import AuthController from "./app/controllers/AuthController";
-import CategoryController from "./app/controllers/CategoryController";
-import ProductController from "./app/controllers/ProductController";
-import AttachmentController from "./app/controllers/AttachmentController";
-import ClientController from "./app/controllers/ClientController";
-import SaleController from "./app/controllers/SaleController";
-
-import AuthMiddleware from "./app/midllewares/auth";
 
 routes.post("/users", UserController.store);
 routes.post("/auth", AuthController.store);
@@ -40,8 +37,9 @@ routes.delete("/categories/:id", CategoryController.delete);
 //products
 routes.get("/products", ProductController.index);
 routes.get("/products/:id", ProductController.show);
-routes.post("/products/:category_id", ProductController.store);
+routes.post("/products", ProductController.store);
 routes.put("/products/:id", ProductController.update);
+routes.delete("/products/:id", ProductController.delete);
 
 //clients
 routes.get("/clients", ClientController.index);

@@ -6,7 +6,6 @@ class Product extends Model {
       {
         name: Sequelize.STRING(45),
         amount: Sequelize.INTEGER,
-        attachment_id: Sequelize.INTEGER,
       },
       { sequelize }
     );

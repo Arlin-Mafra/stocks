@@ -1,7 +1,6 @@
 import * as Yup from "yup";
-
 import Product from "../models/Product";
-import Category from "../models/Category";
+
 
 class ProductController {
   async index(request, response) {
@@ -44,25 +43,21 @@ class ProductController {
       .shape({
         name: Yup.string().max(45).required(),
         amount: Yup.number().required(),
+        category_id:Yup.number(),
         attachment_id: Yup.number(),
       })
       .noUnknown();
 
     try {
-      const { category_id } = request.params;
 
-      const category = await Category.findByPk(category_id);
-
-      if (!category) {
-        response.status(400).json({ error: "Categoria não encontrada" });
-      }
 
       const validFields = await schema.validate(request.body, {
         abortEarly: false,
         stripUnknown: true,
       });
 
-      const product = await Product.create({ ...validFields, category_id });
+
+      const product = await Product.create({ ...validFields });
 
       return response.json(product);
     } catch (error) {
@@ -75,6 +70,7 @@ class ProductController {
       .shape({
         name: Yup.string().max(45),
         amount: Yup.number(),
+        category_id:Yup.number(),
         attachment_id: Yup.number(),
       })
       .noUnknown();
@@ -97,6 +93,16 @@ class ProductController {
     } catch (error) {
       response.status(400).json({ error });
     }
+  }
+
+  async delete(request,response){
+    const product = await Product.findByPk(request.params.id);
+    if (!product) {
+      response.status(400).json({ error: "Produto não encontrado" });
+    }
+
+    await product.destroy()
+
   }
 }
 
