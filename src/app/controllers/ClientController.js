@@ -72,6 +72,14 @@ class ClientController {
       response.status(400).json({ error });
     }
   }
+
+  async delete(request, response) {
+    const client = await Client.findByPk(request.params.id);
+    if (!client) {
+      return response.status(204).json({ message: "Cliente não encontrado" });
+    }
+    await client.destroy();
+  }
 }
 
 export default new ClientController();
