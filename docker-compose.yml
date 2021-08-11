@@ -28,5 +28,5 @@ services:
     depends_on:
       - stockcondo-db
     command:
-      sh -c "/wait && npm run db:migrate && npm run db:seed && npm run dev"
-      # command: sh -c "/wait && npm run dev"
+      sh -c "/wait && npm run db:migrate && npm run dev"
+      # command: sh -c "/wait && npm run dev && npm run db:seed"
