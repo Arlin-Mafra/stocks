@@ -21,9 +21,9 @@ class Product extends Model {
       as: "attachments",
       foreignKey: "attachment_id",
     });
-    this.hasOne(models.ItemSale, {
-      foreignKey: "product_id",
-      as: "item_sale",
+    this.belongsTo(models.ItemSale, {
+      foreignKey: "item_sales_id",
+      as: "item_sales",
     });
   }
 }

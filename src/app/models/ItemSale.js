@@ -12,9 +12,9 @@ class ItemSale extends Model {
     return this;
   }
   static associate(models) {
-    this.belongsTo(models.Product, {
+    this.hasMany(models.Product, {
       foreignKey: "product_id",
-      as: "product",
+      as: "products",
     });
     this.belongsTo(models.Sale, {
       foreignKey: "sale_id",

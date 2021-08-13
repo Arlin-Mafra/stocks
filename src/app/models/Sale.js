@@ -23,8 +23,12 @@ class Sale extends Model {
       });
     this.hasMany(models.ItemSale, {
       foreignKey: "sale_id",
-      as: "item_sale",
+      as: "item_sales",
     });
+    // this.hasMany(models.Product, {
+    //   foreignKey: "product_id",
+    //   as: "product",
+    // });
   }
 }
 
