@@ -4,6 +4,7 @@ class Product extends Model {
   static init(sequelize) {
     super.init(
       {
+        id:{type:Sequelize.INTEGER,primaryKey:true},
         name: Sequelize.STRING(45),
         amount: Sequelize.INTEGER,
       },
@@ -21,9 +22,9 @@ class Product extends Model {
       as: "attachments",
       foreignKey: "attachment_id",
     });
-    this.belongsTo(models.ItemSale, {
-      foreignKey: "item_sales_id",
-      as: "item_sales",
+    this.hasMany(models.ItemSale, {
+      foreignKey: "product_id",
+      as: "item_sale",
     });
   }
 }

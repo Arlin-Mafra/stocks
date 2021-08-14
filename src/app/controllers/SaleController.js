@@ -3,7 +3,6 @@ import * as Yup from "yup";
 import Sale from "../models/Sale";
 import Product from "../models/Product";
 import ItemSale from "../models/ItemSale";
-import { Op } from "sequelize";
 
 class SaleController {
   async index(request, response) {
@@ -15,13 +14,17 @@ class SaleController {
         },
         {
           association: "item_sale",
-          attributes: ["id", "amount","product_id" ],
-        },
+          include:[{
+            association:"product",
+            attributes:['id','name']
+          }]
+        } ,    
         {
           association: "client",
           attributes: ["id", "name", "cpf", "phone"],
-        },
+        }
       ],
+      
     });
     return response.json(sales);
   }
