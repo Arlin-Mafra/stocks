@@ -40,8 +40,10 @@ class SaleController {
           association: "item_sales",
           attributes: ["amount",'product_id'],
           include:[{
-            association:"products",
-            // attributes:['id','amount','name'],
+            include:[{
+              association:"product",
+              attributes:['id','name']
+            }]
           }]
         },
         {
